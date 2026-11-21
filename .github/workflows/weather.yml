@@ -1,0 +1,21 @@
+name: Update weather
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch weather
+        run: |
+          curl -fsS "https://api.open-meteo.com/v1/forecast?latitude=51.3397&longitude=12.3731&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=5&timezone=Europe%2FBerlin&wind_speed_unit=kmh" -o weather.json
+      - name: Commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add weather.json
+          git diff --cached --quiet || (git commit -m "Update weather" && git push)
