@@ -74,11 +74,7 @@ body{padding:14px;box-sizing:border-box}
 <script type="text/javascript">
 (function(){
 var lat=51.3397, lon=12.3731;
-var url="https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+
-"&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m"+
-"&hourly=temperature_2m,precipitation_probability,weather_code"+
-"&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"+
-"&forecast_days=5&timezone=Europe%2FBerlin&wind_speed_unit=kmh";
+var url="weather.json";
 function icon(code,day){
  if(code===0)return day?"☀":"☾";
  if(code===1)return day?"🌤":"☁";
@@ -114,7 +110,7 @@ function dayName(s,i){
 }
 function load(){
  var x=new XMLHttpRequest();
- x.open("GET",url,true);
+ x.open("GET",url+"?t="+new Date().getTime(),true);
  x.onreadystatechange=function(){
   if(x.readyState!==4)return;
   if(x.status<200||x.status>=300){
